@@ -68,14 +68,6 @@ deno run \
   shell example-config dev myapp2
 ```
 
-```sh
-deno run \
-  --allow-read \
-  --allow-net=deno.land \
-  http://dev-server:3001/example.ts \
-  shell example-config dev myapp2
-```
-
 ...would output:
 
 ```sh
