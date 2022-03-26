@@ -17,7 +17,7 @@ Filetypes supported:
 
 ## Usage
 
-Set up a directory like
+Set up a directory for example like
 [example-config](https://deno.land/x/load_config_files/example-config), in your
 current working directory:
 
@@ -26,13 +26,11 @@ example-config/
 ├── dev/
 │   ├── common.js
 │   ├── myapp1.toml
-│   ├── myapp2.toml
-│   └── README.md
+│   └── myapp2.toml
 └── prod/
     ├── common.json
     ├── myapp1.json
-    ├── myapp2.json
-    └── README.md
+    └── myapp2.json
 ```
 
 ```typescript
