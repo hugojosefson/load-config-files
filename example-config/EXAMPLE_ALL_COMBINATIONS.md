@@ -1,6 +1,6 @@
 # All possible combinations
 
-Using all possible combinations to call [example.ts](example.ts):
+Using all possible combinations to call [example.ts](../example.ts):
 
 ```sh
 for format in json shell spring_shell; do

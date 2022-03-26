@@ -17,8 +17,9 @@ Filetypes supported:
 
 ## Usage
 
-Set up a directory like [example-config](example-config), in your current
-working directory:
+Set up a directory like
+[example-config](https://deno.land/x/load_config_files/example-config), in your
+current working directory:
 
 ```
 example-config/
@@ -86,4 +87,4 @@ APP_ID='myapp2'
 ### More examples
 
 For all possible combinations, including different output formats, see
-[EXAMPLE_ALL_COMBINATIONS.md](EXAMPLE_ALL_COMBINATIONS.md).
+[example-config/EXAMPLE_ALL_COMBINATIONS.md](https://deno.land/x/load_config_files/example-config/EXAMPLE_ALL_COMBINATIONS.md).
