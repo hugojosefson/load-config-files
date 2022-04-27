@@ -2,6 +2,7 @@ export { loadConfig } from "./src/load-config.ts";
 export { type Config, type ConfigMerger } from "./src/config.ts";
 export { DEFAULT_OPTIONS, type LoadConfigOptions } from "./src/options.ts";
 export * from "./src/file-loaders.ts";
+export * from "./src/transformers.ts";
 export {
   CONFIG_FORMATTERS,
   type ConfigFormatter,
