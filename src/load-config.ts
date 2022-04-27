@@ -1,20 +1,27 @@
+import { resolve } from "../deps.ts";
 import { Config, ConfigMerger } from "./config.ts";
 import { FileLoader, FileLoaders } from "./file-loaders.ts";
 import { DEFAULT_OPTIONS, LoadConfigOptions } from "./options.ts";
-import { resolve } from "../deps.ts";
+import {
+  asConfigTransformer,
+  composeConfigTransformers,
+  ConfigTransformer,
+} from "./transformers.ts";
 
 async function loadConfigFromFile(
   fileLoader: FileLoader,
   filePath: URL,
+  configTransformer: ConfigTransformer,
   ignoreErrorCodes: string[],
   verbose: boolean,
 ) {
   try {
     const loadedConfig = await fileLoader(filePath);
+    const transformedConfig: Config = await configTransformer(loadedConfig);
     if (verbose) {
-      console.error(filePath.toString(), loadedConfig);
+      console.error(filePath.toString(), transformedConfig);
     }
-    return loadedConfig;
+    return transformedConfig;
   } catch (error) {
     if (ignoreErrorCodes.includes(error?.code)) {
       if (verbose) {
@@ -37,6 +44,7 @@ using ${fileLoader.name}.
 async function loadConfigFromSeveralFileExtensions(
   filepathWithoutExtension: URL,
   configMerger: ConfigMerger,
+  configTransformer: ConfigTransformer,
   ignoreErrorCodes: string[],
   fileLoaders: FileLoaders,
   verbose: boolean,
@@ -49,6 +57,7 @@ async function loadConfigFromSeveralFileExtensions(
       return await loadConfigFromFile(
         fileLoader,
         filePath,
+        configTransformer,
         ignoreErrorCodes,
         verbose,
       );
@@ -66,6 +75,7 @@ async function mergeConfigFromSeveralFileExtensions(
   config: Config,
   filepathWithoutExtension: URL,
   configMerger: ConfigMerger,
+  configTransformer: ConfigTransformer,
   ignoreErrorCodes: string[],
   fileLoaders: FileLoaders,
   verbose: boolean,
@@ -75,6 +85,7 @@ async function mergeConfigFromSeveralFileExtensions(
     await loadConfigFromSeveralFileExtensions(
       filepathWithoutExtension,
       configMerger,
+      configTransformer,
       ignoreErrorCodes,
       fileLoaders,
       verbose,
@@ -92,12 +103,19 @@ export async function loadConfig(
     commonNames,
     ignoreErrorCodes,
     fileLoaders,
+    valueTransformers,
+    configTransformers,
     verbose,
   } = Object.assign(
     {},
     DEFAULT_OPTIONS,
     options,
   );
+
+  const configTransformer = composeConfigTransformers([
+    asConfigTransformer(valueTransformers),
+    ...configTransformers,
+  ]);
 
   const pathSegmentsToSearch = [
     [],
@@ -116,6 +134,7 @@ export async function loadConfig(
         resultingConfig,
         new URL(newPathname, configRoot),
         configMerger,
+        configTransformer,
         ignoreErrorCodes,
         fileLoaders,
         verbose,
