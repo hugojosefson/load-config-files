@@ -5,9 +5,9 @@ export async function importModule(filePath: URL): Promise<Config> {
   const config = await import(filePath.toString());
   const keys = Object.keys(config);
   if (keys.length === 1 && keys[0] === "default") {
-    return config.default;
+    return config.default ?? {};
   }
-  return config;
+  return config ?? {};
 }
 
 export async function importJson(filePath: URL): Promise<Config> {
@@ -17,39 +17,19 @@ export async function importJson(filePath: URL): Promise<Config> {
       assert: { type: "json" },
     }
   );
-  return config.default;
+  return config.default ?? {};
 }
 
 export async function loadToml(filePath: URL): Promise<Config> {
-  return parseToml(await Deno.readTextFile(filePath));
+  return parseToml(await Deno.readTextFile(filePath)) ?? {};
 }
 
 export async function loadYaml(filePath: URL): Promise<Config> {
-  return (await parseYaml(await Deno.readTextFile(filePath))) as Config;
+  return ((await parseYaml(await Deno.readTextFile(filePath))) ?? {}) as Config;
 }
 
 export interface FileLoader {
   (filePath: URL): Promise<Config>;
-}
-
-export function orLoader(
-  firstLoader: FileLoader,
-  ...alternativeLoaders: FileLoader[]
-): FileLoader {
-  if (typeof firstLoader === "undefined") {
-    return () => Promise.resolve({});
-  }
-  if (alternativeLoaders.length === 0) {
-    return firstLoader;
-  }
-  return async function (filePath: URL): Promise<Config> {
-    try {
-      return await firstLoader(filePath);
-    } catch {
-      const [nextLoader, ...nextAlternativeLoaders] = alternativeLoaders;
-      return await orLoader(nextLoader, ...nextAlternativeLoaders)(filePath);
-    }
-  };
 }
 
 export type FileLoaders = Record<string, FileLoader>;
