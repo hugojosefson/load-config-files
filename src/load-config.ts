@@ -122,6 +122,11 @@ export async function loadConfig(
     ...commonNames.map((commonName) => [commonName]),
   ];
 
+  const lastSegment: string | undefined = pathSegments[pathSegments.length - 1];
+  if (lastSegment) {
+    pathSegmentsToSearch.push([lastSegment]);
+  }
+
   let resultingConfig = {};
   for (let i = -1; i < pathSegments.length; i++) {
     for (const extraPathSegments of pathSegmentsToSearch) {

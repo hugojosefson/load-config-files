@@ -1,0 +1,2 @@
+APP_ID: default appId for myapp2
+SOMETHING_IN_COMMON: this value is for myapp2 in all environments.
