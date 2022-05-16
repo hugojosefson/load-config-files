@@ -6,9 +6,15 @@ import {
   ConfigFormatter,
   loadConfig,
   LoadConfigOptions,
+  sortMerger,
+  sortTransformer,
 } from "./mod.ts";
 
-const options: LoadConfigOptions = { verbose: false };
+const options: LoadConfigOptions = {
+  verbose: false,
+  configMerger: sortMerger(),
+  valueTransformers: [sortTransformer()],
+};
 
 const [formatterId, configRootPath, ...segments] = Deno.args;
 const configRootUrl = new URL(configRootPath, "file:" + Deno.cwd() + "/");

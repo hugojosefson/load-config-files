@@ -42,12 +42,19 @@ import {
   ConfigFormatter,
   loadConfig,
   LoadConfigOptions,
+  sortMerger,
+  sortTransformer,
 } from "https://deno.land/x/load_config_files/mod.ts";
 
-const options: LoadConfigOptions = { verbose: false };
+const options: LoadConfigOptions = {
+  verbose: false,
+  configMerger: sortMerger(),
+  configTransformers: [sortTransformer()],
+  valueTransformers: [sortTransformer()],
+};
 
 const [formatterId, configRootPath, ...segments] = Deno.args;
-const configRootUrl = new URL(configRootPath, "file:" + Deno.cwd());
+const configRootUrl = new URL(configRootPath, "file:" + Deno.cwd() + "/");
 const config: Config = await loadConfig(configRootUrl, segments, options);
 
 const formatter: ConfigFormatter = CONFIG_FORMATTERS[formatterId];
@@ -69,9 +76,10 @@ deno run \
 ...would output:
 
 ```sh
-COLOR='purple'
-CUSTOMER_URLS='{"CustomerA":"https://dev.example.com/customers/CustomerA.json","CustomerB":"https://dev.example.com/customers/CustomerB.json","CustomerC":"https://dev.example.com/customers/CustomerC.json","CustomerD":"https://dev.example.com/customers/CustomerD.json","CustomerE":"https://dev.example.com/customers/CustomerE.json"}'
 APP_ID='myapp2'
+COLOR='purple'
+CUSTOMER_URLS='{"CustomerA":"https://dev.example.com/customers/CustomerA.json","CustomerB":"https://dev.example.com/customers/CustomerB.json","CustomerC":"https://dev.example.com/customers/CustomerC.json","CustomerD":"https://dev.example.com/customers/CustomerD.json","CustomerE":"https://dev.example.com/customers/CustomerE.json","CustomerF":"https://dev.example.com/customers/CustomerF.json"}'
+SOMETHING_IN_COMMON='this value is for myapp2 in all environments.'
 ```
 
 ### More examples
