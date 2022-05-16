@@ -1,8 +1,6 @@
 import { toObject } from "https://deno.land/x/to_object@0.0.1/mod.ts";
 
-const CUSTOMER_NAMES = ["A", "B", "F", "C", "D", "E"].map((x) =>
-  `Customer${x}`
-);
+const CUSTOMER_NAMES = ["A", "B", "C", "D", "E"].map((x) => `Customer${x}`);
 
 /**
  * This module is common for all apps in the `dev` directory.
